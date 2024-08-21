@@ -50,6 +50,8 @@ jobs:
         with:
           node-version: 18.x
           cache: "yarn"
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
       - name: Install dependencies
         run: yarn install --immutable --mode=skip-build
       - name: Build libraries
