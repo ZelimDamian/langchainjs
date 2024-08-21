@@ -25,23 +25,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Check linting
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-          cache: "yarn"
-      - name: Install dependencies
-        run: yarn install --immutable --mode=skip-build
-      - name: Check linting
-        run: yarn run lint
-
   build:
-    name: Build libraries
+    name: Build LangChain Libraries
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,18 +35,16 @@ jobs:
         with:
           node-version: 18.x
           cache: "yarn"
-      - name: Install Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
       - name: Install dependencies
         run: yarn install --immutable --mode=skip-build
-      - name: Build libraries
-        run: yarn turbo run build
+      - name: Build LangChain libraries
+        run: yarn turbo run build --filter=langchain --filter=langchain-core --filter=./libs/*
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: langchain-libraries
           path: |
-            libs/*/dist
-            langchain-core/dist
             langchain/dist
+            langchain-core/dist
+            libs/*/dist
           if-no-files-found: error
